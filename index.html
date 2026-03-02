@@ -1,62 +1,353 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STAR LABS | Innovation Redefined</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Space+Grotesk', sans-serif;
-      background-color: #000;
-      color: #e2e8f0;
-    }
-    .mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .silver-gradient {
-      background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #475569 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .glass-card {
-      background: rgba(15, 23, 42, 0.4);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(148, 163, 184, 0.1);
-    }
-    .glow-hover:hover {
-      box-shadow: 0 0 20px rgba(148, 163, 184, 0.2);
-    }
-    @keyframes scanline {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(100%); }
-    }
-    .scanline {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: rgba(148, 163, 184, 0.1);
-      animation: scanline 4s linear infinite;
-    }
-  </style>
-<script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "recharts": "https://esm.sh/recharts@^3.7.0",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "@google/genai": "https://esm.sh/@google/genai@^1.41.0"
-  }
-}
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAR LABS | Innovation Redefined</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #000;
+            color: #e2e8f0;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .silver-gradient {
+            background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 50%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(148, 163, 184, 0.2);
+        }
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(148, 163, 184, 0.1);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+        }
+        .nav-link.active {
+            color: white;
+            border-bottom: 1px solid white;
+        }
+    </style>
 </head>
-<body>
-  <div id="root"></div>
+<body class="min-h-screen bg-black text-slate-300 flex flex-col relative overflow-x-hidden">
+    <!-- Global Decorative Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-slate-800 rounded-full blur-[120px] opacity-20"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-slate-900 rounded-full blur-[120px] opacity-20"></div>
+        <div class="scanline"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 glass-card border-b border-slate-800/50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2 nav-trigger" data-target="home">
+                <div class="w-8 h-8 border-2 border-slate-400 rotate-45 flex items-center justify-center">
+                    <div class="w-4 h-4 bg-slate-400"></div>
+                </div>
+                <span class="text-xl font-bold tracking-tighter silver-gradient">STAR LABS</span>
+            </a>
+
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="nav-link nav-trigger text-sm font-medium tracking-widest transition-colors hover:text-white text-slate-500" data-target="home">HOME</a>
+                <a href="#" class="nav-link nav-trigger text-sm font-medium tracking-widest transition-colors hover:text-white text-slate-500" data-target="services">SERVICES</a>
+                <a href="#" class="nav-link nav-trigger text-sm font-medium tracking-widest transition-colors hover:text-white text-slate-500" data-target="lab">INNOVATION LAB</a>
+            </div>
+
+            <button class="px-5 py-2 border border-slate-700 text-xs font-bold tracking-widest hover:bg-slate-800 transition-all uppercase">
+                Contact Us
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow z-10">
+        <!-- Home Section -->
+        <section id="home" class="page-section active space-y-32 pb-32">
+            <div class="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-6">
+                <div class="absolute inset-0 z-0">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-slate-900/30 rounded-full blur-[150px]"></div>
+                </div>
+                
+                <div class="relative z-10 text-center max-w-4xl mx-auto space-y-8">
+                    <div class="inline-block px-4 py-1 border border-slate-800 bg-slate-900/50 rounded-full text-[10px] tracking-[0.3em] font-bold text-slate-500 uppercase">
+                        EST. 2026 // Digital Transformation
+                    </div>
+                    <h1 class="text-6xl md:text-8xl font-bold leading-none tracking-tight">
+                        INVENTING THE <br />
+                        <span class="silver-gradient">FUTURE</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                        STAR LABS is a precision-driven tech collective dedicated to building the tools of tomorrow. 
+                        From startups to global enterprises, we engineer solutions that transform lives.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
+                        <a href="#" class="nav-trigger px-8 py-4 bg-white text-black text-sm font-bold tracking-widest hover:bg-slate-200 transition-all w-full sm:w-auto text-center" data-target="services">
+                            OUR SERVICES
+                        </a>
+                        <a href="#" class="nav-trigger px-8 py-4 border border-slate-700 text-sm font-bold tracking-widest hover:bg-slate-900 transition-all w-full sm:w-auto text-center" data-target="lab">
+                            ENTER TECH LAB
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-bold tracking-tight">THE STAR <br /><span class="text-slate-500">PHILOSOPHY</span></h2>
+                    <div class="space-y-8">
+                        <div class="flex gap-6">
+                            <div class="flex-shrink-0 w-12 h-12 glass-card flex items-center justify-center text-xl font-mono">01</div>
+                            <div>
+                                <h4 class="font-bold text-white mb-2 uppercase tracking-wider">Precision Engineering</h4>
+                                <p class="text-slate-400">We treat every line of code like a mechanical clockwork. Reliability is not an option; it is our foundation.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="flex-shrink-0 w-12 h-12 glass-card flex items-center justify-center text-xl font-mono">02</div>
+                            <div>
+                                <h4 class="font-bold text-white mb-2 uppercase tracking-wider">Human-Centric Future</h4>
+                                <p class="text-slate-400">Technology exists to serve humanity. We focus on digital transformation that simplifies lifestyle and amplifies potential.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="flex-shrink-0 w-12 h-12 glass-card flex items-center justify-center text-xl font-mono">03</div>
+                            <div>
+                                <h4 class="font-bold text-white mb-2 uppercase tracking-wider">Radical Research</h4>
+                                <p class="text-slate-400">Our R&D department explores the fringes of AI, spatial computing, and decentralized networks.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-8 rounded-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 border-t border-r border-slate-700"></div>
+                    <div class="absolute bottom-0 left-0 w-24 h-24 border-b border-l border-slate-700"></div>
+                    <h3 class="text-xs font-mono text-slate-500 mb-6 uppercase">System_Metrics.v04</h3>
+                    <div id="metrics-container" class="h-64 flex items-center justify-center border border-slate-800/50">
+                        <!-- Placeholder for metrics visualization -->
+                        <div class="text-center">
+                            <div class="text-4xl font-bold silver-gradient">99.9%</div>
+                            <div class="text-[10px] font-mono text-slate-500 uppercase">Uptime Reliability</div>
+                        </div>
+                    </div>
+                    <p class="mt-8 text-xs text-slate-500 text-center font-mono">LIVE FEED: GLOBAL IMPACT INDEX</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="page-section space-y-24 py-24">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-20 space-y-4">
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tight uppercase">Services & <br /><span class="text-slate-500">Expertise</span></h2>
+                    <div class="w-24 h-1 bg-white"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-px bg-slate-800">
+                    <div class="bg-black p-12 group hover:bg-slate-900/40 transition-all duration-500 relative">
+                        <div class="mb-8 text-5xl font-mono text-slate-800 group-hover:text-slate-700 transition-colors">01</div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wider">Web & App Architecture</h3>
+                        <p class="text-slate-400 mb-8 leading-relaxed max-w-sm">Scalable, performant solutions built with precision for the modern web.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">Web3</span>
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">Cloud Native</span>
+                        </div>
+                    </div>
+                    <div class="bg-black p-12 group hover:bg-slate-900/40 transition-all duration-500 relative">
+                        <div class="mb-8 text-5xl font-mono text-slate-800 group-hover:text-slate-700 transition-colors">02</div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wider">Digital Transformation</h3>
+                        <p class="text-slate-400 mb-8 leading-relaxed max-w-sm">Modernizing legacy systems with cutting-edge workflows.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">AI Integration</span>
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">Automation</span>
+                        </div>
+                    </div>
+                    <div class="bg-black p-12 group hover:bg-slate-900/40 transition-all duration-500 relative">
+                        <div class="mb-8 text-5xl font-mono text-slate-800 group-hover:text-slate-700 transition-colors">03</div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wider">Innovation R&D</h3>
+                        <p class="text-slate-400 mb-8 leading-relaxed max-w-sm">Bespoke research into emerging technologies.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">R&D</span>
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">Prototyping</span>
+                        </div>
+                    </div>
+                    <div class="bg-black p-12 group hover:bg-slate-900/40 transition-all duration-500 relative">
+                        <div class="mb-8 text-5xl font-mono text-slate-800 group-hover:text-slate-700 transition-colors">04</div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wider">Enterprise Security</h3>
+                        <p class="text-slate-400 mb-8 leading-relaxed max-w-sm">Robust infrastructure to protect your digital assets.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">Encryption</span>
+                            <span class="text-[10px] font-mono border border-slate-800 px-3 py-1 text-slate-500">Audit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-32 glass-card p-12 text-center space-y-8">
+                    <h3 class="text-3xl font-bold uppercase tracking-widest">Ready to transform?</h3>
+                    <p class="text-slate-400 max-w-2xl mx-auto">Every great transformation begins with a single conversation. Our engineers are ready to build your vision.</p>
+                    <button class="px-10 py-4 bg-white text-black font-bold tracking-widest hover:bg-slate-200 transition-all">BOOK A CONSULTATION</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lab Section -->
+        <section id="lab" class="page-section py-24">
+            <div class="max-w-7xl mx-auto px-6 min-h-screen">
+                <div class="text-center space-y-6 mb-16">
+                    <h2 class="text-4xl md:text-6xl font-bold uppercase tracking-tighter silver-gradient">Innovation Lab</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto font-mono text-sm tracking-wide">INTERFACE VERSION: 3.0.1 // AI CONSULTANT ONLINE</p>
+                </div>
+
+                <div class="grid lg:grid-cols-5 gap-12">
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="glass-card p-8 rounded-sm space-y-6 border-l-4 border-l-slate-400">
+                            <h3 class="text-xl font-bold uppercase tracking-widest">Brainstorm Concept</h3>
+                            <p class="text-sm text-slate-400">Input a problem, industry, or seed idea. Our STAR-AI will draft a futuristic digital transformation roadmap.</p>
+                            <div class="space-y-4">
+                                <textarea id="lab-query" placeholder="E.g. Smart logistics for local farmers..." class="w-full h-32 bg-black border border-slate-800 p-4 text-slate-300 focus:outline-none focus:border-slate-500 font-mono text-sm resize-none"></textarea>
+                                <button id="generate-btn" class="w-full py-4 bg-slate-100 text-black font-bold tracking-[0.2em] hover:bg-white transition-all flex items-center justify-center gap-2">
+                                    GENERATE CONCEPT
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 border border-slate-800/50">
+                            <h4 class="text-xs font-mono text-slate-500 uppercase mb-4">Core Lab Metrics</h4>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-slate-500">Processing Node</span>
+                                    <span class="font-mono text-slate-300">GEMINI-PRO-01</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-slate-500">Latency</span>
+                                    <span class="font-mono text-slate-300">~1.4s</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-slate-500">Status</span>
+                                    <span class="font-mono text-emerald-500">OPERATIONAL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-3">
+                        <div id="lab-error" class="hidden bg-red-900/20 border border-red-800 p-6 text-red-400 font-mono text-sm mb-6"></div>
+                        
+                        <div id="lab-placeholder" class="h-full min-h-[400px] border border-dashed border-slate-800 flex flex-col items-center justify-center text-slate-700">
+                            <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            <p class="font-mono text-xs tracking-[0.3em] uppercase">Awaiting Input Signal</p>
+                        </div>
+
+                        <div id="lab-loading" class="hidden h-full min-h-[400px] flex flex-col items-center justify-center space-y-6">
+                            <div class="relative w-24 h-24">
+                                <div class="absolute inset-0 border-2 border-slate-800 animate-ping"></div>
+                                <div class="absolute inset-4 border-2 border-slate-700 animate-pulse"></div>
+                                <div class="absolute inset-8 bg-slate-500 animate-spin"></div>
+                            </div>
+                            <p class="font-mono text-sm text-slate-500 animate-pulse">SYNTHESIZING INNOVATION...</p>
+                        </div>
+
+                        <div id="lab-result" class="hidden glass-card p-10 space-y-8 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4">
+                                <span id="result-feasibility-large" class="text-[60px] font-mono text-slate-900 absolute right-4 top-2 select-none opacity-50">0%</span>
+                            </div>
+                            <div>
+                                <h3 id="result-title" class="text-3xl font-bold uppercase tracking-wider mb-4 border-b border-slate-800 pb-4 silver-gradient"></h3>
+                                <p id="result-concept" class="text-slate-400 leading-relaxed italic"></p>
+                            </div>
+                            <div class="space-y-6">
+                                <h4 class="text-xs font-mono text-slate-500 uppercase tracking-widest">Digital Transformation Roadmap</h4>
+                                <div id="result-roadmap" class="space-y-4"></div>
+                            </div>
+                            <div class="pt-8 border-t border-slate-800 flex justify-between items-center">
+                                <button class="text-xs font-mono text-slate-500 uppercase hover:text-white transition-colors">Save Concept</button>
+                                <div class="flex items-center gap-2 text-xs text-slate-600 font-mono">
+                                    <div id="feasibility-dot" class="w-2 h-2 rounded-full"></div>
+                                    Feasibility: <span id="result-feasibility-text"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="z-10 bg-black border-t border-slate-900 py-16 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
+            <div class="col-span-2 space-y-6">
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 border border-slate-400 rotate-45 flex items-center justify-center">
+                        <div class="w-2 h-2 bg-slate-400"></div>
+                    </div>
+                    <span class="text-lg font-bold tracking-tighter silver-gradient">STAR LABS</span>
+                </div>
+                <p class="text-slate-500 max-w-sm text-sm leading-relaxed">Advanced digital transformation for a forward-thinking world. Engineering excellence, redefined for the next era of human industry.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 glass-card flex items-center justify-center text-xs font-mono hover:bg-white hover:text-black transition-all">X</a>
+                    <a href="#" class="w-10 h-10 glass-card flex items-center justify-center text-xs font-mono hover:bg-white hover:text-black transition-all">IN</a>
+                    <a href="#" class="w-10 h-10 glass-card flex items-center justify-center text-xs font-mono hover:bg-white hover:text-black transition-all">GH</a>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <h4 class="text-xs font-bold uppercase tracking-widest">Navigation</h4>
+                <ul class="space-y-4 text-sm text-slate-500">
+                    <li><a href="#" class="nav-trigger hover:text-white transition-colors" data-target="home">Home</a></li>
+                    <li><a href="#" class="nav-trigger hover:text-white transition-colors" data-target="services">Services</a></li>
+                    <li><a href="#" class="nav-trigger hover:text-white transition-colors" data-target="lab">Innovation Lab</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="space-y-6">
+                <h4 class="text-xs font-bold uppercase tracking-widest">HQ</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">Cyberpark Building 04<br>New Zurich Tech Zone<br>CH-8000 Switzerland</p>
+                <p class="text-sm font-mono text-slate-300">contact@starlabs.io</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-[10px] font-mono text-slate-600 uppercase tracking-widest">© 2026 STAR LABS TECHNOLOGIES // ALL RIGHTS RESERVED</p>
+            <div class="flex items-center gap-4">
+                <div class="h-1 w-12 bg-slate-800"></div>
+                <p class="text-[10px] font-mono text-slate-600 uppercase tracking-widest">PRECISION. INNOVATION. FUTURE.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "@google/genai": "https://esm.sh/@google/genai@^1.41.0"
+        }
+    }
+    </script>
+    <script type="module" src="/main.js"></script>
 </body>
 </html>
